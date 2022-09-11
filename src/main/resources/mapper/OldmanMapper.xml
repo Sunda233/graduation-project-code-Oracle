@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esp.boot.mapper.OldManMapper">
+
+    <!--表的关联-->
+    <resultMap type="com.esp.boot.entity.EspOldmaninfo" id="EspOldmaninfoMap">
+        <result property="oldmanId" column="oldman_Id" jdbcType="INTEGER"/>
+        <result property="oldmanSerialnumber" column="oldman_serialnumber" jdbcType="VARCHAR"/>
+        <result property="oldmanIdnumber" column="oldman_idnumber" jdbcType="VARCHAR"/>
+        <result property="oldmanName" column="oldman_name" jdbcType="VARCHAR"/>
+        <result property="oldmanSex" column="oldman_sex" jdbcType="VARCHAR"/>
+        <result property="oldmanHeight" column="oldman_height" jdbcType="INTEGER"/>
+        <result property="oldmanAge" column="oldman_age" jdbcType="INTEGER"/>
+        <result property="oldmanCheckintime" column="oldman_checkintime" jdbcType="VARCHAR"/>
+        <result property="oldmanRoomnumber" column="oldman_roomnumber" jdbcType="VARCHAR"/>
+
+        <!--看护人员表的关联-->
+        <association javaType="com.esp.boot.entity.EspCaregiverinfo" property="caregiverinfo">
+            <result property="caregiverId" column="caregiver_id" jdbcType="INTEGER"/>
+            <result property="caregiverEmpno" column="caregiver_empno" jdbcType="VARCHAR"/>
+            <result property="caregiverPhone" column="caregiver_phone" jdbcType="VARCHAR"/>
+            <result property="caregiverName" column="caregiver_name" jdbcType="VARCHAR"/>
+            <result property="caregiverAge" column="caregiver_age" jdbcType="INTEGER"/>
+            <result property="caregiverSex" column="caregiver_sex" jdbcType="VARCHAR"/>
+            <result property="caregiverHeight" column="caregiver_height" jdbcType="INTEGER"/>
+            <result property="caregiverIdnumber" column="caregiver_idnumber" jdbcType="VARCHAR"/>
+            <result property="caregiverIntheyear" column="caregiver_intheyear" jdbcType="VARCHAR"/>
+        </association>
+
+    </resultMap>
+
+    <!--****************************************************查******************************************-->
+    <!--oldman_Id,oldman_serialnumber,oldman_idnumber,oldman_name,oldman_sex,oldman_height,oldman_age,oldman_checkintime,oldman_roomnumber,caregiver_empno-->
+    <!--查询全部-->
+    <select id="getAllInfo" resultMap="EspOldmaninfoMap">
+        select
+        *
+        from esp_oldmaninfo
+    </select>
+    <!--根据编号删除老人信息-->
+    <delete id="deleteinfo">
+        delete from esp_oldmaninfo where oldman_serialnumber = #{oldmanSerialnumber}
+    </delete>
+    <!--添加一条老人信息-->
+    <insert id="insertinfo" keyProperty="oldmanId" useGeneratedKeys="true">/*id值返回给原来要插入的对象里*/
+        insert into esp_oldmaninfo(oldman_serialnumber, oldman_idnumber, oldman_name, oldman_sex,oldman_height,oldman_age,oldman_checkintime,oldman_roomnumber,caregiver_empno)
+        values (#{oldmanSerialnumber}, #{oldmanIdnumber}, #{oldmanName}, #{oldmanSex}, #{oldmanHeight}, #{oldmanAge}, #{oldmanCheckintime}, #{oldmanRoomnumber},#{caregiverinfo.caregiverEmpno})
+    </insert>
+    <!--修改老人信息-->
+    <!--通过老人编号修改数据-->
+    <update id="updateinfo">
+        update esp_oldmaninfo
+        <set>
+            <!--<if test="oldmanIdnumber != null and oldmanIdnumber != ''">
+                oldman_idnumber = #{oldmanIdnumber},
+            </if>-->
+            <if test="oldmanName != null and oldmanName != ''">
+                oldman_name = #{oldmanName},
+            </if>
+            <if test="oldmanIdnumber != null and oldmanIdnumber != ''">
+                oldman_idnumber = #{oldmanIdnumber},
+            </if>
+            <if test="oldmanSex != null and oldmanSex != ''">
+                oldman_sex = #{oldmanSex},
+            </if>
+            <if test="oldmanHeight != null and oldmanHeight != ''">
+                oldman_height = #{oldmanHeight},
+            </if>
+            <if test="oldmanAge != null and oldmanAge != ''">
+                oldman_age = #{oldmanAge},
+            </if>
+            <if test="oldmanCheckintime != null and oldmanCheckintime != ''">
+                oldman_checkintime = #{oldmanCheckintime},
+            </if>
+            <if test="oldmanRoomnumber != null and oldmanRoomnumber != ''">
+                oldman_roomnumber = #{oldmanRoomnumber},
+            </if>
+            <if test="caregiverinfo.caregiverEmpno != null and caregiverinfo.caregiverEmpno != ''">
+                caregiver_empno = #{caregiverinfo.caregiverEmpno},
+            </if>
+        </set>
+        where oldman_serialnumber = #{oldmanSerialnumber}
+    </update>
+    <!--根据编号查询老人信息-->
+    <select id="getOneInfo" resultMap="EspOldmaninfoMap">
+        select
+        *
+        from esp_oldmaninfo
+        where oldman_serialnumber = #{oldmanSerialnumber}
+    </select>
+    <!--根据身份证号查询老人信息-->
+    <select id="getOneInfoByIdN" resultMap="EspOldmaninfoMap">
+        select
+        *
+        from esp_oldmaninfo
+        where oldman_idnumber = #{oldmanIdnumber}
+    </select>
+
+    <!---->
+
+
+
+
+</mapper>

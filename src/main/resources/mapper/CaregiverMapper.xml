@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esp.boot.mapper.CaregiverMapper">
+
+    <resultMap type="com.esp.boot.entity.EspCaregiverinfo" id="EspCaregiverinfoMap">
+    <result property="caregiverId" column="caregiver_id" jdbcType="INTEGER"/>
+    <result property="caregiverEmpno" column="caregiver_empno" jdbcType="VARCHAR"/>
+    <result property="caregiverPhone" column="caregiver_phone" jdbcType="VARCHAR"/>
+    <result property="caregiverName" column="caregiver_name" jdbcType="VARCHAR"/>
+    <result property="caregiverAge" column="caregiver_age" jdbcType="INTEGER"/>
+    <result property="caregiverSex" column="caregiver_sex" jdbcType="VARCHAR"/>
+    <result property="caregiverHeight" column="caregiver_height" jdbcType="INTEGER"/>
+    <result property="caregiverIdnumber" column="caregiver_idnumber" jdbcType="VARCHAR"/>
+    <result property="caregiverIntheyear" column="caregiver_intheyear" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <!--查询所有看护人员信息-->
+    <select id="getAllInfo" resultMap="EspCaregiverinfoMap">
+        select
+        *
+        from esp_caregiverinfo
+    </select>
+    <!--通过编号删除看护人员信息-->
+    <delete id="deleteinfo">
+        delete from esp_caregiverinfo where caregiver_empno = #{no}
+    </delete>
+    <!--添加看护人员信息-->
+    <insert id="insertinfo" keyProperty="caregiverId" useGeneratedKeys="true">/*id值返回给原来要插入的对象里*/
+        insert into esp_caregiverinfo(caregiver_empno, caregiver_phone, caregiver_name, caregiver_age,caregiver_sex,caregiver_height,caregiver_idnumber,caregiver_intheyear)
+        values (#{caregiverEmpno}, #{caregiverPhone}, #{caregiverName}, #{caregiverAge}, #{caregiverSex}, #{caregiverHeight}, #{caregiverIdnumber}, #{caregiverIntheyear})
+    </insert>
+   <!--根据编号查询看护人员信息-->
+    <select id="getOneInfo" resultMap="EspCaregiverinfoMap">
+        select
+        *
+        from esp_caregiverinfo
+        where caregiver_empno = #{no}
+    </select>
+    <!--修改看护人员信息-->
+    <update id="updateinfo">
+        update esp_caregiverinfo
+        <set>
+            <!--<if test="caregiverEmpno != null and caregiverEmpno != ''">
+                caregiver_empno = #{caregiverEmpno},
+            </if>-->
+            <if test="caregiverPhone != null and caregiverPhone != ''">
+                caregiver_phone = #{caregiverPhone},
+            </if>
+            <if test="caregiverName != null and caregiverName != ''">
+                caregiver_name = #{caregiverName},
+            </if>
+            <if test="caregiverAge != null and caregiverAge != ''">
+                caregiver_age = #{caregiverAge},
+            </if>
+            <if test="caregiverSex != null and caregiverSex != ''">
+                caregiver_sex = #{caregiverSex},
+            </if>
+            <if test="caregiverHeight != null and caregiverHeight != ''">
+                caregiver_height = #{caregiverHeight},
+            </if>
+            <if test="caregiverIdnumber!= null and caregiverIdnumber != ''">
+                caregiver_idnumber = #{caregiverIdnumber},
+            </if>
+            <if test="caregiverIntheyear!= null and caregiverIntheyear != ''">
+                caregiver_intheyear = #{caregiverIntheyear},
+            </if>
+        </set>
+        where caregiver_empno = #{caregiverEmpno}
+    </update>
+    <!--查询所有非看护组长身份的看护人员-->
+    <select id="getSomeInfoByUnLeader" resultMap="EspCaregiverinfoMap">
+      SELECT * from esp_caregiverinfo
+      where caregiver.caregiver_empno not in (SELECT caregiver_empno from esp_caregiverleaderinfo)
+</select>
+
+
+</mapper>

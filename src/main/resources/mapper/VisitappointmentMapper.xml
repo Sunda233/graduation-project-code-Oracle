@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esp.boot.mapper.VisitappointmentMapper">
+
+    <!--表的关联-->
+    <resultMap type="com.esp.boot.entity.EspVisitappointment" id="Visitappointment">
+        <result property="visitappointmentId" column="visitappointment_id" jdbcType="INTEGER"/>
+        <result property="visitappointmentDate" column="visitappointment_date" jdbcType="VARCHAR"/>
+        <result property="visitappointmentCreatedate" column="visitappointment_createdate" jdbcType="VARCHAR"/>
+        <result property="visitappointmentRemark" column="visitappointment_remark" jdbcType="VARCHAR"/>
+        <result property="visitappointmentState" column="visitappointment_state" jdbcType="VARCHAR"/>
+        <result property="ror" column="relatives_relative" jdbcType="VARCHAR"/><!--亲属关系表中-->
+        <!--老人表的关联-->
+        <association javaType="com.esp.boot.entity.EspOldmaninfo" property="oldmaninfo">
+        <result property="oldmanId" column="oldman_Id" jdbcType="INTEGER"/>
+        <result property="oldmanSerialnumber" column="oldman_serialnumber" jdbcType="VARCHAR"/>
+        <result property="oldmanIdnumber" column="oldman_idnumber" jdbcType="VARCHAR"/>
+        <result property="oldmanName" column="oldman_name" jdbcType="VARCHAR"/>
+        <result property="oldmanSex" column="oldman_sex" jdbcType="VARCHAR"/>
+        <result property="oldmanHeight" column="oldman_height" jdbcType="INTEGER"/>
+        <result property="oldmanAge" column="oldman_age" jdbcType="INTEGER"/>
+        <result property="oldmanCheckintime" column="oldman_checkintime" jdbcType="VARCHAR"/>
+        <result property="oldmanRoomnumber" column="oldman_roomnumber" jdbcType="VARCHAR"/>
+        </association>
+        <!--亲属表的关联-->
+        <association javaType="com.esp.boot.entity.EspRelativesinfo" property="relativesinfo">
+            <result property="relativesId" column="relatives_id" jdbcType="INTEGER"/>
+            <result property="relativesSerialnumber" column="relatives_serialnumber" jdbcType="VARCHAR"/>
+            <result property="relativesName" column="relatives_name" jdbcType="VARCHAR"/>
+            <result property="relativesPhone" column="relatives_phone" jdbcType="VARCHAR"/>
+            <result property="relativesPassword" column="relatives_password" jdbcType="INTEGER"/>
+        </association>
+        <!--看护人员表的关联-->
+        <association javaType="com.esp.boot.entity.EspCaregiverinfo" property="oldmaninfo.caregiverinfo">
+            <result property="caregiverId" column="caregiver_id" jdbcType="INTEGER"/>
+            <result property="caregiverEmpno" column="caregiver_empno" jdbcType="VARCHAR"/>
+            <result property="caregiverPhone" column="caregiver_phone" jdbcType="VARCHAR"/>
+            <result property="caregiverName" column="caregiver_name" jdbcType="VARCHAR"/>
+            <result property="caregiverAge" column="caregiver_age" jdbcType="INTEGER"/>
+            <result property="caregiverSex" column="caregiver_sex" jdbcType="VARCHAR"/>
+            <result property="caregiverHeight" column="caregiver_height" jdbcType="INTEGER"/>
+            <result property="caregiverIdnumber" column="caregiver_idnumber" jdbcType="VARCHAR"/>
+            <result property="caregiverIntheyear" column="caregiver_intheyear" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+
+    <!--sql-->
+    <!--根据编号删除预约处理单-->
+    <delete id="deleteinfo">
+        delete from esp_visitappointment where visitappointment_id=#{id}
+    </delete>
+    <!--通过通知单编号查询通知单信息-->
+    <select id="getOneInfo" resultMap="Visitappointment">
+        select
+        *
+        from esp_visitappointment
+        where visitappointment_id=#{id}
+    </select>
+    <!--更新数据单处理状态-->
+    <update id="updateinfo">
+        update esp_visitappointment
+        <set>
+            <if test="visitappointmentRemark!= null and visitappointmentRemark != ''">
+                visitappointment_remark = #{visitappointmentRemark},
+            </if>
+            <if test="visitappointmentState!= null and visitappointmentState!= ''">
+                visitappointment_state = #{visitappointmentState},
+            </if>
+        </set>
+        where visitappointment_id = #{visitappointmentId}
+    </update>
+
+    <!--添加新信息-->
+    <insert id="insertinfo" keyProperty="visitappointmentId" useGeneratedKeys="true">/*id值返回给原来要插入的对象里*/
+        insert into esp_visitappointment(relatives_serialnumber, oldman_serialnumber, visitappointment_date, visitappointment_createdate,visitappointment_remark,visitappointment_state)
+        values (#{relativesinfo.relativesSerialnumber}, #{oldmaninfo.oldmanSerialnumber}, #{visitappointmentDate}, #{visitappointmentCreatedate}, #{visitappointmentRemark}, #{visitappointmentState})
+    </insert>
+
+    <!--查询所有信息-->
+    <select id="getAllInfo" resultMap="Visitappointment">
+        select
+        *
+        from esp_visitappointment,esp_relativesinfo,esp_oldmaninfo,esp_caregiverinfo
+        where esp_visitappointment.relatives_serialnumber=esp_relativesinfo.relatives_serialnumber and esp_visitappointment.oldman_serialnumber=esp_oldmaninfo.oldman_serialnumber and esp_oldmaninfo.caregiver_empno=esp_caregiverinfo.caregiver_empno
+    </select>
+
+    <!--通过亲属编号查询-->
+    <select id="getSomeInfoByRelatives" resultMap="Visitappointment">
+        select
+        *
+        from esp_visitappointment,esp_relativesinfo,esp_oldmaninfo,esp_caregiverinfo,esp_relativesoldmanrelative
+        where esp_visitappointment.relatives_serialnumber=#{no}
+              and esp_relativesoldmanrelative.relatives_serialnumber=esp_relativesinfo.relatives_serialnumber
+              and esp_relativesoldmanrelative.oldman_serialnumber=esp_oldmaninfo.oldman_serialnumber
+              and esp_visitappointment.relatives_serialnumber=esp_relativesinfo.relatives_serialnumber
+              and esp_visitappointment.oldman_serialnumber=esp_oldmaninfo.oldman_serialnumber
+              and esp_oldmaninfo.caregiver_empno=esp_caregiverinfo.caregiver_empno
+    </select>
+
+    <!--通过老人编号查询，组号-->
+    <select id="getSomeInfoByCaregiver" resultMap="Visitappointment">
+        select
+        *
+        from esp_visitappointment,esp_relativesinfo,esp_oldmaninfo,esp_caregiverinfo,esp_relativesoldmanrelative,esp_caregivergroup
+        where esp_caregivergroup.group_id=#{id}
+              and esp_relativesoldmanrelative.relatives_serialnumber=esp_relativesinfo.relatives_serialnumber
+              and esp_relativesoldmanrelative.oldman_serialnumber=esp_oldmaninfo.oldman_serialnumber
+              and esp_visitappointment.relatives_serialnumber=esp_relativesinfo.relatives_serialnumber
+              and esp_visitappointment.oldman_serialnumber=esp_oldmaninfo.oldman_serialnumber
+              and esp_oldmaninfo.caregiver_empno=esp_caregiverinfo.caregiver_empno
+              and esp_oldmaninfo.caregiver_empno=esp_caregivergroup.caregiver_empno
+    </select>
+
+
+
+
+
+</mapper>

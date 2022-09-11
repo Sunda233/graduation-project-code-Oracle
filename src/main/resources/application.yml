@@ -1,0 +1,64 @@
+spring:
+  #数据库配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/elderly_service_platform?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    username: root
+    password: 123456
+    #数据库驱动的名字
+    driver-class-name: com.mysql.jdbc.Driver
+
+    druid:
+      aop-patterns: com.atguigu.admin.*  #springbean监控
+      filters: stat,wall,slf4j  #所有开启的功能
+
+      stat-view-servlet:  #监控页配置
+        enabled: true
+        login-username: admin  #登录监控界面的用户名，密码
+        login-password: admin
+        resetEnable: false  #重置按钮
+
+      web-stat-filter:  #web监控
+        enabled: true
+        urlPattern: /*
+        exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*'
+
+
+      filter:
+        stat: #sql监控
+          slow-sql-millis: 1000   #所有超过一千毫秒的都是慢查询
+          logSlowSql: true   #记录慢查询
+          enabled: true
+        wall: #防火墙
+          enabled: true
+          config:
+            drop-table-allow: false  #不允许删表，所有删表操作都拦截
+
+
+  mvc:
+    #开启请求映射rest，现在： /user    GET-获取用户    DELETE-删除用户     PUT-修改用户      POST-保存用户
+    hiddenmethod:
+      filter:
+        enabled: true
+    #开启参数的内容协商，xml，json
+    contentnegotiation:
+      favor-parameter: false
+#静态资源访问路径
+    static-path-pattern: /**
+    #配置启动标志
+  banner:
+    image:
+      location: Fwbs.png
+      bitdepth: 4
+
+
+# 配置mybatis规则、使用MyBatisPlus则此项配置无效
+# 配置mybatis规则
+mybatis:
+  #  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  configuration: #指定全局配置文件的相关配置项
+    map-underscore-to-camel-case: true  #全局配置文件的配置
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

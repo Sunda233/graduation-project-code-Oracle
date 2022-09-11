@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esp.boot.mapper.ChatlogMapper">
+    <resultMap type="com.esp.boot.entity.EspChatlog" id="Chatlog">
+        <result property="chatlogId" column="chatlog_id" jdbcType="INTEGER"/>
+        <result property="chatlogSenddate" column="chatlog_senddate" jdbcType="VARCHAR"/>
+        <result property="chatlogSendtime" column="chatlog_sendtime" jdbcType="VARCHAR"/>
+        <result property="chatlogSendcontent" column="chatlog_sendcontent" jdbcType="VARCHAR"/>
+        <result property="chatlogRemark" column="chatlog_remark" jdbcType="VARCHAR"/>
+        <result property="chatlogSource" column="chatlog_source" jdbcType="VARCHAR"/>
+        <result property="chatlogState" column="chatlog_state" jdbcType="INTEGER"/>
+
+        <association javaType="com.esp.boot.entity.EspRelativesinfo" property="relativesinfo">
+            <result property="relativesId" column="relatives_id" jdbcType="INTEGER"/>
+            <result property="relativesSerialnumber" column="relatives_serialnumber" jdbcType="VARCHAR"/>
+            <result property="relativesName" column="relatives_name" jdbcType="VARCHAR"/>
+            <result property="relativesPhone" column="relatives_phone" jdbcType="VARCHAR"/>
+            <result property="relativesPassword" column="relatives_password" jdbcType="INTEGER"/>
+        </association>
+        <!--看护人员表的关联-->
+        <association javaType="com.esp.boot.entity.EspCaregiverinfo" property="caregiverinfo">
+            <result property="caregiverId" column="caregiver_id" jdbcType="INTEGER"/>
+            <result property="caregiverEmpno" column="caregiver_empno" jdbcType="VARCHAR"/>
+            <result property="caregiverPhone" column="caregiver_phone" jdbcType="VARCHAR"/>
+            <result property="caregiverName" column="caregiver_name" jdbcType="VARCHAR"/>
+            <result property="caregiverAge" column="caregiver_age" jdbcType="INTEGER"/>
+            <result property="caregiverSex" column="caregiver_sex" jdbcType="VARCHAR"/>
+            <result property="caregiverHeight" column="caregiver_height" jdbcType="INTEGER"/>
+            <result property="caregiverIdnumber" column="caregiver_idnumber" jdbcType="VARCHAR"/>
+            <result property="caregiverIntheyear" column="caregiver_intheyear" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+    <!--sql-->
+    <!--根据亲属信息查询-->
+    <select id="getSomeInfoByRelatives" resultMap="Chatlog">
+        select *
+        from esp_chatlog,esp_caregiverinfo,esp_relativesinfo
+        where esp_chatlog.relatives_serialnumber=#{no}
+        and chatlog_source =#{shoufa}
+        and chatlog_state !=3
+        and esp_chatlog.caregiver_empno=esp_caregiverinfo.caregiver_empno
+        and esp_chatlog.relatives_serialnumber=esp_relativesinfo.relatives_serialnumber
+
+    </select>
+
+    <!--真正删除私信-->
+    <delete id="deleteinfo">
+        delete from esp_chatlog where chatlog_id = #{id}
+    </delete>
+    <!--亲属删除私信-->
+    <update id="deleteinfoByRelatives">
+        update esp_chatlog
+        <set>  chatlog_state = 3,</set>
+        where chatlog_id = #{id}
+    </update>
+    <!--看护人员删除私信，置私信状态为2-->
+    <update id="deleteinfoByCaregiver">
+        update esp_chatlog
+        <set>chatlog_state = 2, </set>
+        where chatlog_id = #{id}
+    </update>
+
+    <!--添加一条数据-->
+    <insert id="insertinfo" keyProperty="chatlogId" useGeneratedKeys="true">/*id值返回给原来要插入的对象里*/
+        insert into esp_chatlog(relatives_serialnumber, caregiver_empno, chatlog_senddate, chatlog_sendtime,chatlog_sendcontent,chatlog_remark,chatlog_source,chatlog_state)
+        values (#{relativesinfo.relativesSerialnumber}, #{caregiverinfo.caregiverEmpno}, #{chatlogSenddate}, #{chatlogSendtime}, #{chatlogSendcontent}, #{chatlogRemark}, #{chatlogSource}, #{chatlogState})
+    </insert>
+    <!--通过ID查询-->
+    <select id="getOneInfoByID" resultMap="Chatlog">
+        select *
+        from esp_chatlog,esp_caregiverinfo,esp_relativesinfo
+        where chatlog_id=#{id}
+        and esp_chatlog.caregiver_empno=esp_caregiverinfo.caregiver_empno
+        and esp_chatlog.relatives_serialnumber=esp_relativesinfo.relatives_serialnumber
+
+    </select>
+    <!--根据看护信息查询-->
+    <select id="getSomeInfoByCaregiver" resultMap="Chatlog">
+        select *
+        from esp_chatlog,esp_caregiverinfo,esp_relativesinfo
+        where esp_chatlog.caregiver_empno=#{no} and chatlog_source =#{shoufa}
+        and chatlog_state !=2
+        and esp_chatlog.caregiver_empno=esp_caregiverinfo.caregiver_empno
+        and esp_chatlog.relatives_serialnumber=esp_relativesinfo.relatives_serialnumber
+
+    </select>
+
+    <!--根据看护信息查询发件箱-->
+    <!--根据亲属信息查询-->
+
+
+
+
+</mapper>

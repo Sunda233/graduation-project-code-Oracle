@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esp.boot.mapper.GroupCaregiverMapper">
+
+    <!--表的关联-->
+    <resultMap type="com.esp.boot.entity.EspCaregivergroup" id="caregivergroupMap">
+        <result property="caregiverGroupid" column="caregivergroup_id" jdbcType="INTEGER"/>
+        <result property="groupId" column="group_id" jdbcType="INTEGER"/>
+
+        <!--看护人员表的关联-->
+        <association javaType="com.esp.boot.entity.EspCaregiverinfo" property="caregiverinfo">
+            <result property="caregiverId" column="caregiver_id" jdbcType="INTEGER"/>
+            <result property="caregiverEmpno" column="caregiver_empno" jdbcType="VARCHAR"/>
+            <result property="caregiverPhone" column="caregiver_phone" jdbcType="VARCHAR"/>
+            <result property="caregiverName" column="caregiver_name" jdbcType="VARCHAR"/>
+            <result property="caregiverAge" column="caregiver_age" jdbcType="INTEGER"/>
+            <result property="caregiverSex" column="caregiver_sex" jdbcType="VARCHAR"/>
+            <result property="caregiverHeight" column="caregiver_height" jdbcType="INTEGER"/>
+            <result property="caregiverIdnumber" column="caregiver_idnumber" jdbcType="VARCHAR"/>
+            <result property="caregiverIntheyear" column="caregiver_intheyear" jdbcType="VARCHAR"/>
+        </association>
+        <association javaType="com.esp.boot.entity.EspOldmaninfo" property="oldmaninfo">
+            <result property="oldmanId" column="oldman_Id" jdbcType="INTEGER"/>
+            <result property="oldmanSerialnumber" column="oldman_serialnumber" jdbcType="VARCHAR"/>
+            <result property="oldmanIdnumber" column="oldman_idnumber" jdbcType="VARCHAR"/>
+            <result property="oldmanName" column="oldman_name" jdbcType="VARCHAR"/>
+            <result property="oldmanSex" column="oldman_sex" jdbcType="VARCHAR"/>
+            <result property="oldmanHeight" column="oldman_height" jdbcType="INTEGER"/>
+            <result property="oldmanAge" column="oldman_age" jdbcType="INTEGER"/>
+            <result property="oldmanCheckintime" column="oldman_checkintime" jdbcType="VARCHAR"/>
+            <result property="oldmanRoomnumber" column="oldman_roomnumber" jdbcType="VARCHAR"/>
+        </association>
+
+
+    </resultMap>
+
+    <!--****************************************************查******************************************-->
+    <!--oldman_Id,oldman_serialnumber,oldman_idnumber,oldman_name,oldman_sex,oldman_height,oldman_age,oldman_checkintime,oldman_roomnumber,caregiver_empno-->
+    <!--查询全部-->
+    <select id="getAllInfo" resultMap="caregivergroupMap">
+        select
+        *
+        from esp_caregivergroup,esp_caregiverinfo
+        where esp_caregivergroup.caregiver_empno=esp_caregiverinfo.caregiver_empno
+    </select>
+
+    <!--分配看护人员进组-->
+    <insert id="insertinfo" keyProperty="caregiverGroupid" useGeneratedKeys="true">/*id值返回给原来要插入的对象里*/
+        insert into esp_caregivergroup(group_id, caregiver_empno)
+        values (#{groupId}, #{caregiverinfo.caregiverEmpno})
+    </insert>
+
+    <!--删除看护人员进组信息-->
+    <delete id="deleteinfo">
+        delete from esp_caregivergroup where caregiver_empno = #{no}
+    </delete>
+
+    <!--根据组号查询小组下组员信息 看护组长查询看护人员与老人信息 -->
+   <!-- <select id="getAllInfoById" resultMap="caregivergroupMap">
+        select
+        *
+        from esp_caregivergroup,esp_caregiverinfo,esp_oldmaninfo
+        where esp_caregivergroup.caregiver_empno=esp_caregiverinfo.caregiver_empno and esp_oldmaninfo.caregiver_empno=esp_caregiverinfo.caregiver_empno
+        and group_id = #{no}
+    </select>-->
+
+    <!--看护组长查询看护人员信息-->
+    <select id="getAllInfoById" resultMap="caregivergroupMap">
+      SELECT *
+      from esp_caregivergroup,esp_caregiverinfo
+      where esp_caregivergroup.caregiver_empno=esp_caregiverinfo.caregiver_empno
+      and group_id = #{no}
+    </select>
+    <!--看护组长查询老人信息 （表链接写反，暂时弃之不用）转到身体数据表的map-->
+    <select id="getSomeOldmanInfoByGroup" resultMap="caregivergroupMap">
+        select
+        *
+        from esp_oldmaninfo,esp_caregiverinfo,esp_caregivergroup
+        where esp_oldmaninfo.caregiver_empno=esp_caregiverinfo.caregiver_empno
+        and esp_caregivergroup.caregiver_empno=esp_oldmaninfo.caregiver_empno
+        and group_id = #{no}
+    </select>
+
+    <!--左外连接，查询所有未分组的人员，且不是看护组长-->
+    <select id="getSomeInfoByUnGroup" resultMap="caregivergroupMap">
+      SELECT * from `esp_caregiverinfo` as caregiver LEFT JOIN `esp_caregivergroup` as groupp ON caregiver.caregiver_empno= groupp.caregiver_empno
+      where group_id is null and caregiver.caregiver_empno not in (SELECT caregiver_empno from esp_caregiverleaderinfo)
+</select>
+
+  <!-- 修改看护人员进组信息-->
+    <update id="updateinfo">
+        update esp_caregivergroup
+        <set>
+            <if test="groupId!= null and groupId != ''">
+                group_id = #{groupId},
+            </if>
+        </set>
+        where caregiver_empno = #{caregiverinfo.caregiverEmpno}
+    </update>
+
+</mapper>

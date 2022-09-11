@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<!--老人亲戚的公共内容-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="commonh ead_office" id="commonhead_office"><!--公共内容的抽取-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Responsive Admin Dashboard Template">
+    <meta name="keywords" content="admin,dashboard">
+    <meta name="author" content="skcats">
+    <!-- 以上6个meta标签*必须*首先出现在头部;任何其他的标题内容必须在这些标签之后 -->
+    <!-- 头部 -->
+    <title>Home</title>
+    <title>亲属公共内容</title>
+    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" th:href="@{/https://fonts.googleapis.com/css?family=Ubuntu}" rel="stylesheet"><!--/代表当前路径-->
+    <link href="assets/plugins/bootstrap/css/bootstrap.min.css" th:href="@{/assets/plugins/bootstrap/css/bootstrap.min.css}" rel="stylesheet"><!--使用thymeleaf写法动态超链接，动态加上项目名，部署时想改变项目名不需要修改源代码，可以保留原来的-->
+    <link href="assets/plugins/font-awesome/css/font-awesome.min.css" th:href="@{/assets/plugins/font-awesome/css/font-awesome.min.css}"  rel="stylesheet">
+    <link href="assets/plugins/icomoon/style.css" th:href="@{/assets/plugins/icomoon/style.css}" rel="stylesheet">
+    <link href="assets/plugins/uniform/css/default.css" th:href="@{/assets/plugins/uniform/css/default.css}" rel="stylesheet"/>
+    <link href="assets/plugins/switchery/switchery.min.css" th:href="@{/assets/plugins/switchery/switchery.min.css}" rel="stylesheet"/>
+    <link href="assets/plugins/nvd3/nv.d3.min.css" th:href="@{/assets/plugins/nvd3/nv.d3.min.css}" rel="stylesheet">
+
+    <!-- Theme Styles -->
+    <link href="assets/css/ecaps.min.css" rel="stylesheet">
+    <link href="assets/css/custom.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<!-- Page Container，页面容器开始 -->
+<div class="page-container" id="menuheader-office">
+<!-- Page Sidebar，，左侧菜单栏 -->
+<div class="page-sidebar"  id="leftmenu">
+    <a class="logo-box" href="index.html">
+        <span>ESP-亲属人员</span>
+        <i class="icon-radio_button_unchecked" id="fixed-sidebar-toggle-button"></i>
+        <i class="icon-close" id="sidebar-toggle-button-close"></i>
+    </a>
+    <div class="page-sidebar-inner">
+        <div class="page-sidebar-menu">
+            <ul class="accordion-menu">
+                <li class="active-page">
+                </li>
+                <li>
+                    <a th:href="@{/infoOneself_relatives}"><!---->
+                        <i class="menu-icon icon-home4"></i><span>查看本人信息</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/table_relatives_getoldmaninfo}"><!---->
+                        <i class="menu-icon icon-inbox"></i><span>查看绑定老人信息</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/relatives/table_relatives_Visitappointment}">
+                    <i class="menu-icon icon-inbox"></i><span>预约看望老人</span>
+                </a>
+                </li>
+                <li ><!--class="active-page"-->
+                    <a th:href="@{/select/relatives/ElderlyPhysicalData}"><!---->
+                        <i class="menu-icon icon-home4"></i><span>查看老人身体数据</span>
+                    </a>
+                </li>
+                <!--自己写-->
+                <!--看护人员信息管理-->
+                <li>
+                    <a href="javascript:void(0)">
+                        <i class="menu-icon icon-format_list_bulleted"></i><span>我与看护</span><i class="accordion-icon fa fa-angle-left"></i><!--class图标式样-->
+                    </a>
+                    <ul class="sub-menu">
+                        <li><a th:href="@{/table_relatives_getcaregiverinfo}">查看老人看护信息</a></li>
+                        <li><a th:href="@{/relatives/email/shoujian}"><i class="menu-icon icon-inbox"></i>向看护发送信息</a></li>
+                    </ul>
+                </li>
+                <li class="menu-divider"></li>
+                <li>
+                    <a href="index.html">
+                        <i class="menu-icon icon-help_outline"></i><span>使用说明</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="index.html">
+                        <i class="menu-icon icon-public"></i><span>更新日志</span><span class="label label-danger">1.0</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div><!-- /Page Sidebar 左侧菜单栏结束-->
+<!-- Page Content 页面内容-->
+    <div class="page-content">
+        <!-- Page Header 页面顶部导航栏-->
+        <div class="page-header" id="headermenu">
+            <div class="search-form">
+                <form action="#" method="GET">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control search-input" placeholder="Type something...">
+                        <span class="input-group-btn">
+                                    <button class="btn btn-default" id="close-search" type="button"><i class="icon-close"></i></button>
+                                </span>
+                    </div>
+                </form>
+            </div>
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <div class="logo-sm">
+                            <a href="javascript:void(0)" id="sidebar-toggle-button"><i class="fa fa-bars"></i></a>
+                            <a class="logo-box" href="index.html"><span>ecaps</span></a>
+                        </div>
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <i class="fa fa-angle-down"></i>
+                        </button>
+                    </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav"><!--三个标志-->
+                            <li><a href="javascript:void(0)" id="collapsed-sidebar-toggle-button"><i class="fa fa-bars"></i></a></li>
+                            <li><a href="javascript:void(0)" id="toggle-fullscreen"><i class="fa fa-expand"></i></a></li>
+                            <li><a href="javascript:void(0)" id="search-button"><i class="fa fa-search"></i></a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a th:href="@{/relatives/email/shoujian}"><i class="fa fa-envelope"></i></a></li>
+                            <li class="dropdown user-dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="http://via.placeholder.com/36x36" alt="" class="img-circle"></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a th:href="@{/infoOneself_relatives}">个人信息</a></li>
+                                        <li><a th:href="@{/logout}">退出系统</a></li>
+                                    </ul>
+                            </li>
+                            <!--登录成功显示的用户名 thymeleaf语法,获取session中存放的值-->
+                            <li><a href="#" >欢迎您  [[${session.info.relativesName}]]</a></li>
+
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>
+        </div><!-- /Page Header 页面顶部导航栏-->
+        <!--网页内容-->
+        <!--网页内容结束-->
+        <!--右侧聊天框主界面-->
+    </div><!-- /Page Content 页面内容结束-->
+</div><!-- /Page Container 页面容器结束-->
+
+<div class="page-footer" id="page_footer_ssd">
+    <p> &copy; 2021.SunDa graduation design work elderly service platform 孙达-毕业设计.<a target="_blank" href="http://sc.chinaz.com/moban/">&#x7F51;&#x9875;&#x6A21;&#x677F;</a></p>
+</div>
+
+<div id="commonscript_office" ><!--公共内容的抽取  th:fragment="commonscript-office"或者使用id-->
+    <!-- Javascripts -->
+    <script th:src="@{/assets/plugins/jquery/jquery-3.1.0.min.js}"></script><!--可以更改为thymeleaf写法-->
+    <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="assets/plugins/uniform/js/jquery.uniform.standalone.js"></script>
+    <script src="assets/plugins/switchery/switchery.min.js"></script>
+    <script src="assets/plugins/d3/d3.min.js"></script>
+    <script src="assets/plugins/nvd3/nv.d3.min.js"></script>
+    <script src="assets/plugins/flot/jquery.flot.min.js"></script>
+    <script src="assets/plugins/flot/jquery.flot.time.min.js"></script>
+    <script src="assets/plugins/flot/jquery.flot.symbol.min.js"></script>
+    <script src="assets/plugins/flot/jquery.flot.resize.min.js"></script>
+    <script src="assets/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="assets/plugins/flot/jquery.flot.pie.min.js"></script>
+    <script src="assets/plugins/chartjs/chart.min.js"></script>
+    <script src="assets/js/ecaps.min.js"></script>
+    <script src="assets/js/pages/dashboard.js"></script>
+</div>
+
+<!--跳转界面js-->
+<script>
+    //post请求失效
+ /*   function infoOneself_relatives(no) {
+            /!*获取no*!/
+            alert("编号"+no);
+            $.ajax({
+                url: "/infoOneself_relatives",
+                type: "POST",//方法类型
+                data: {
+                    no: no,
+                },
+            });
+    }*/
+</script>
+</body>
+</html>

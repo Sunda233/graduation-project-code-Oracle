@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Responsive Admin Dashboard Template">
+        <meta name="keywords" content="admin,dashboard">
+        <meta name="author" content="skcats">
+        <!-- The above 6 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        
+        <!-- Title -->
+        <title></title>
+
+   <!--     &lt;!&ndash; Styles &ndash;&gt;
+        <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+        <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+        <link href="assets/plugins/icomoon/style.css" rel="stylesheet">
+        <link href="assets/plugins/uniform/css/default.css" rel="stylesheet"/>
+        <link href="assets/plugins/switchery/switchery.min.css" rel="stylesheet"/>
+      
+        &lt;!&ndash; Theme Styles &ndash;&gt;
+        <link href="assets/css/ecaps.min.css" rel="stylesheet">
+        <link href="assets/css/custom.css" rel="stylesheet">
+
+        &lt;!&ndash; HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries &ndash;&gt;
+        &lt;!&ndash; WARNING: Respond.js doesn't work if you view the page via file:// &ndash;&gt;
+        &lt;!&ndash;HTML5 shim和response .js for IE8支持HTML5元素和媒体查询如果你通过file查看页面，response .js不工作:&ndash;&gt;
+        &lt;!&ndash;[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>-->
+        <![endif]-->
+        <!--引入css-->
+        <div th:include="common_jscss :: #commonscript_css"><!--id声明的--></div>
+        <!--引入js-->
+        <div th:include="common_jscss :: #commonscript_js"><!--id声明的--></div>
+    </head>
+    <body>
+        
+        <!-- Page Container -->
+        <div class="page-container">
+                <!-- Page Inner -->
+                <div class="page-inner login-page">
+                    <div id="main-wrapper" class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-3 login-box">
+                                <h4 class="login-title">登录到你的账户</h4>
+                                <label style="color: red" th:text="${msg}"></label><!--获得值-->
+                                <form action="index.html" method="post" th:action="@{/login}"><!--超链接-->
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">用户名</label>
+                                        <input class="form-control" id="exampleInputEmail1" name="username">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">密码</label>
+                                        <input type="password" class="form-control" id="exampleInputPassword1" name="password">
+                                    </div>
+                                    <button class="btn btn-primary" type="submit">登录</button>
+                                    <!--<a href="index.html" class="btn btn-primary">登录</a>-->
+                                    <a th:href="@{/register}" class="btn btn-default">亲属自助注册</a><br>
+                                    <a href="index.html" class="forgot-link">忘记密码？</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+            </div><!-- /Page Content -->
+        </div><!-- /Page Container -->
+        
+        
+        <!-- Javascripts -->
+     <!--   <script src="assets/plugins/jquery/jquery-3.1.0.min.js"></script>
+        <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+        <script src="assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+        <script src="assets/plugins/uniform/js/jquery.uniform.standalone.js"></script>
+        <script src="assets/plugins/switchery/switchery.min.js"></script>
+        <script src="assets/js/ecaps.min.js"></script>-->
+    </body>
+</html>

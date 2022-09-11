@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--身体数据表，记录老人身体数据-->
+<mapper namespace="com.esp.boot.mapper.ElderlyPhysicalDataMapper">
+    <resultMap type="com.esp.boot.entity.EspElderlyPhysicalData" id="ElderlyPhysicalData">
+    <result property="physicaldataId" column="physicaldata_id" jdbcType="INTEGER"/>
+    <result property="physicaldataBloodpressurelow" column="physicaldata_bloodpressurelow" jdbcType="VARCHAR"/>
+        <result property="physicaldataBloodpressurehigh" column="physicaldata_bloodpressurehigh" jdbcType="VARCHAR"/>
+    <result property="physicaldataWeight" column="physicaldata_weight" jdbcType="VARCHAR"/>
+    <result property="physicaldataDiet" column="physicaldata_diet" jdbcType="VARCHAR"/>
+    <result property="physicaldataDate" column="physicaldata_date" jdbcType="VARCHAR"/>
+    <result property="physicaldataRemark" column="physicaldata_remark" jdbcType="VARCHAR"/>
+        <!--老人表的关联-->
+        <association javaType="com.esp.boot.entity.EspOldmaninfo" property="oldmanInfo">
+        <result property="oldmanId" column="oldman_Id" jdbcType="INTEGER"/>
+        <result property="oldmanSerialnumber" column="oldman_serialnumber" jdbcType="VARCHAR"/>
+        <result property="oldmanIdnumber" column="oldman_idnumber" jdbcType="VARCHAR"/>
+        <result property="oldmanName" column="oldman_name" jdbcType="VARCHAR"/>
+        <result property="oldmanSex" column="oldman_sex" jdbcType="VARCHAR"/>
+        <result property="oldmanHeight" column="oldman_height" jdbcType="INTEGER"/>
+        <result property="oldmanAge" column="oldman_age" jdbcType="INTEGER"/>
+        <result property="oldmanCheckintime" column="oldman_checkintime" jdbcType="VARCHAR"/>
+        <result property="oldmanRoomnumber" column="oldman_roomnumber" jdbcType="VARCHAR"/>
+        </association>
+        <!--看护人员表的关联-->
+        <association javaType="com.esp.boot.entity.EspCaregiverinfo" property="oldmanInfo.caregiverinfo">
+            <result property="caregiverId" column="caregiver_id" jdbcType="INTEGER"/>
+            <result property="caregiverEmpno" column="caregiver_empno" jdbcType="VARCHAR"/>
+            <result property="caregiverPhone" column="caregiver_phone" jdbcType="VARCHAR"/>
+            <result property="caregiverName" column="caregiver_name" jdbcType="VARCHAR"/>
+            <result property="caregiverAge" column="caregiver_age" jdbcType="INTEGER"/>
+            <result property="caregiverSex" column="caregiver_sex" jdbcType="VARCHAR"/>
+            <result property="caregiverHeight" column="caregiver_height" jdbcType="INTEGER"/>
+            <result property="caregiverIdnumber" column="caregiver_idnumber" jdbcType="VARCHAR"/>
+            <result property="caregiverIntheyear" column="caregiver_intheyear" jdbcType="VARCHAR"/>
+        </association>
+        <!--小组关联-->
+        <association javaType="com.esp.boot.entity.EspCaregivergroup" property="group">
+        <result property="caregiverGroupid" column="caregivergroup_id" jdbcType="INTEGER"/>
+        <result property="groupId" column="group_id" jdbcType="INTEGER"/>
+    </association>
+        <!--看护人员表关联-->
+        <association javaType="com.esp.boot.entity.EspCaregiverinfo" property="group.caregiverinfo">
+            <result property="caregiverId" column="caregiver_id" jdbcType="INTEGER"/>
+            <result property="caregiverEmpno" column="caregiver_empno" jdbcType="VARCHAR"/>
+            <result property="caregiverPhone" column="caregiver_phone" jdbcType="VARCHAR"/>
+            <result property="caregiverName" column="caregiver_name" jdbcType="VARCHAR"/>
+            <result property="caregiverAge" column="caregiver_age" jdbcType="INTEGER"/>
+            <result property="caregiverSex" column="caregiver_sex" jdbcType="VARCHAR"/>
+            <result property="caregiverHeight" column="caregiver_height" jdbcType="INTEGER"/>
+            <result property="caregiverIdnumber" column="caregiver_idnumber" jdbcType="VARCHAR"/>
+            <result property="caregiverIntheyear" column="caregiver_intheyear" jdbcType="VARCHAR"/>
+        </association>
+        <!--亲属关系表的关联 （查询亲属信息用）-->
+        <association javaType="com.esp.boot.entity.EspRelativesoldmanrelative" property="relativesoldmanrelative">
+            <result property="rorId" column="ror_id" jdbcType="INTEGER"/>
+            <result property="relativesrelative" column="relatives_relative" jdbcType="VARCHAR"/>
+        </association>
+        <association javaType="com.esp.boot.entity.EspRelativesinfo" property="relativesoldmanrelative.relativesinfo">
+            <result property="relativesId" column="relatives_id" jdbcType="INTEGER"/>
+            <result property="relativesSerialnumber" column="relatives_serialnumber" jdbcType="VARCHAR"/>
+            <result property="relativesName" column="relatives_name" jdbcType="VARCHAR"/>
+            <result property="relativesPhone" column="relatives_phone" jdbcType="VARCHAR"/>
+            <result property="relativesPassword" column="relatives_password" jdbcType="INTEGER"/>
+        </association>
+    </resultMap>
+
+    <!--通过亲属编号查询身体数据-->
+    <select id="getSomeInfoByRelatives" resultMap="ElderlyPhysicalData">
+        select
+        *
+        from esp_elderlyphysicaldata,esp_relativesoldmanrelative,esp_oldmaninfo,esp_caregiverinfo,esp_caregivergroup
+        where esp_elderlyphysicaldata.oldman_serialnumber=esp_relativesoldmanrelative.oldman_serialnumber
+        and esp_relativesoldmanrelative.relatives_serialnumber=#{no}
+        and esp_elderlyphysicaldata.oldman_serialnumber=esp_oldmaninfo.oldman_serialnumber
+        and esp_oldmaninfo.caregiver_empno=esp_caregiverinfo.caregiver_empno
+        and esp_caregivergroup.caregiver_empno=esp_oldmaninfo.caregiver_empno
+    </select>
+    <!--通过id修改数据信息-->
+    <update id="updateinfo">
+        update esp_elderlyphysicaldata
+        <set>
+            <if test="physicaldataBloodpressurelow != null and physicaldataBloodpressurelow != ''">
+                physicaldata_bloodpressurelow = #{physicaldataBloodpressurelow},
+            </if>
+            <if test="physicaldataBloodpressurehigh != null and physicaldataBloodpressurehigh != ''">
+                physicaldata_bloodpressurehigh = #{physicaldataBloodpressurehigh},
+            </if>
+            <if test="physicaldataWeight != null and physicaldataWeight != ''">
+                physicaldata_weight = #{physicaldataWeight},
+            </if>
+            <if test="physicaldataDiet != null and physicaldataDiet != ''">
+                physicaldata_diet = #{physicaldataDiet},
+            </if>
+            <if test="physicaldataDate != null and physicaldataDate != ''">
+                physicaldata_date = #{physicaldataDate},
+            </if>
+            <if test="physicaldataRemark != null and physicaldataRemark != ''">
+                physicaldata_remark = #{physicaldataRemark},
+            </if>
+        </set>
+        where physicaldata_id = #{physicaldataId}
+    </update>
+    <!--添加一条信息-->
+    <insert id="insertinfo" keyProperty="physicaldataId" useGeneratedKeys="true">/*id值返回给原来要插入的对象里*/
+        insert into esp_elderlyphysicaldata(oldman_serialnumber, physicaldata_bloodpressurelow,physicaldata_bloodpressurehigh, physicaldata_weight, physicaldata_diet,physicaldata_date,physicaldata_remark)
+        values (#{oldmanInfo.oldmanSerialnumber}, #{physicaldataBloodpressurelow}, #{physicaldataBloodpressurehigh}, #{physicaldataWeight}, #{physicaldataDiet}, #{physicaldataDate}, #{physicaldataRemark})
+    </insert>
+    <!--查询所有身体数据信息-->
+    <select id="getAllInfo" resultMap="ElderlyPhysicalData">
+        select
+        *
+        from esp_elderlyphysicaldata,esp_oldmaninfo,esp_caregiverinfo,esp_caregivergroup
+        where esp_elderlyphysicaldata.oldman_serialnumber=esp_oldmaninfo.oldman_serialnumber and esp_oldmaninfo.caregiver_empno=esp_caregiverinfo.caregiver_empno and esp_caregivergroup.caregiver_empno=esp_oldmaninfo.caregiver_empno
+    </select>
+    <!--根据组号查询身体数据信息-->
+    <select id="getSomeInfoByGroup" resultMap="ElderlyPhysicalData">
+        select
+        *
+        from esp_elderlyphysicaldata,esp_oldmaninfo,esp_caregiverinfo,esp_caregivergroup
+        where esp_elderlyphysicaldata.oldman_serialnumber=esp_oldmaninfo.oldman_serialnumber and esp_oldmaninfo.caregiver_empno=esp_caregiverinfo.caregiver_empno and esp_caregivergroup.caregiver_empno=esp_oldmaninfo.caregiver_empno
+        and group_id=#{no}
+    </select>
+
+    <!--根据组号查询老人信息
+        顺便查出老人的亲属关系与亲属信息-->
+    <select id="getAllInfoByGroup" resultMap="ElderlyPhysicalData">
+        select
+        *
+        from esp_oldmaninfo,esp_caregiverinfo,esp_caregivergroup,esp_relativesoldmanrelative,esp_relativesinfo
+        where esp_oldmaninfo.caregiver_empno=esp_caregiverinfo.caregiver_empno
+        and esp_caregivergroup.caregiver_empno=esp_oldmaninfo.caregiver_empno
+        and esp_relativesoldmanrelative.relatives_serialnumber=esp_relativesinfo.relatives_serialnumber
+        and esp_relativesoldmanrelative.oldman_serialnumber=esp_oldmaninfo.oldman_serialnumber
+        and group_id=#{no}
+    </select>
+
+    <!--管理员查询亲属与老人绑定信息-->
+    <select id="getAllInfoByStaff" resultMap="ElderlyPhysicalData">
+        select
+        *
+        from esp_oldmaninfo,esp_caregiverinfo,esp_caregivergroup,esp_relativesoldmanrelative,esp_relativesinfo
+        where esp_oldmaninfo.caregiver_empno=esp_caregiverinfo.caregiver_empno
+        and esp_caregivergroup.caregiver_empno=esp_oldmaninfo.caregiver_empno
+        and esp_relativesoldmanrelative.relatives_serialnumber=esp_relativesinfo.relatives_serialnumber
+        and esp_relativesoldmanrelative.oldman_serialnumber=esp_oldmaninfo.oldman_serialnumber
+    </select>
+
+    <!--查询所有组的所有老人信息-->
+    <select id="getAllOldmanInfoByGroup" resultMap="ElderlyPhysicalData">
+        select
+        *
+        from esp_oldmaninfo,esp_caregiverinfo,esp_caregivergroup
+        where esp_oldmaninfo.caregiver_empno=esp_caregiverinfo.caregiver_empno
+        and esp_caregivergroup.caregiver_empno=esp_oldmaninfo.caregiver_empno
+    </select>
+
+    <!--根据组号查询老人信息-->
+    <select id="getSomeOldmanInfoByGroup" resultMap="ElderlyPhysicalData">
+        select
+        *
+        from esp_oldmaninfo,esp_caregiverinfo,esp_caregivergroup
+        where esp_oldmaninfo.caregiver_empno=esp_caregiverinfo.caregiver_empno
+        and esp_caregivergroup.caregiver_empno=esp_oldmaninfo.caregiver_empno
+        and group_id = #{no}
+    </select>
+
+    <!--通过编号删除身体数据信息-->
+    <delete id="deleteinfo">
+        delete from esp_elderlyphysicaldata where physicaldata_id = #{no}
+    </delete>
+
+
+</mapper>

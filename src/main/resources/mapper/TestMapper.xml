@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esp.boot.mapper.TestMapper">
+
+<!--    public Account getAcct(Long id); -->
+ <!--   <select id="getById" resultType="com.esp.boot.entity.EspRelativesInfo">/*id映射为mapper的方法名*/
+        select * from  esp_relativesinfo where  relatives_id=#{id}
+    </select>
+-->
+    <!--配置文件版的插入-->
+    <!--    public void insert(City city);-->
+    <!--    <insert id="insert" useGeneratedKeys="true" keyProperty="id">--><!--2.使用自增主键，3，自增主键名为id，这样只要保存了数据库，可以将id默认重新放回传入的属性-->
+    <!--        insert into  city(`name`,`state`,`country`) values(#{name},#{state},#{country})-->
+    <!--    </insert>-->
+
+</mapper>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!--管理员登录管理界面-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- The above 6 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <!-- Title -->
+    <title>办公人员主界面</title>
+    <!--<div th:include="common_office :: commonhead_office"></div>--><!--insert是整个放入，replace是替换父标签，include是将标签内的内容放入-->
+    <div th:include="common_office :: #commonhead_office"></div>
+</head>
+<body>
+<!--菜单栏-->
+
+<!-- Page Container，页面容器开始 -->
+<div class="page-container">
+    <!-- Page Sidebar，，左侧菜单栏 -->
+    <div th:replace="common_office :: #leftmenu_office"></div><!-- /Page Sidebar 左侧菜单栏结束-->
+    <!-- Page Content 页面内容-->
+    <div class="page-content">
+        <!-- Page Header 页面顶部导航栏-->
+        <div th:replace="common_office :: #headermenu_office"></div><!--公共内容抽取-->
+       <!-- /Page Header 页面顶部导航栏-->
+        <!--网页内容-->
+        <!-- 网页内容 -->
+        <div class="page-inner">
+            <div class="page-title">
+                <h3 class="breadcrumb-header">欢迎进入养老服务平台管理员界面</h3>
+            </div>
+
+            <!--页脚防伪标识-->
+            <div th:replace="common_office :: #page_footer_ssd"></div><!--标识结束-->
+        </div><!-- /Page Inner 网页内容结束 -->
+        <!--网页内容结束-->
+        <!--右侧聊天框界面-->
+        <div th:replace="common_office :: #right_sidebar"></div><!--公共内容抽取-->
+        <!--右侧聊天框-->
+    </div><!-- /Page Content 页面内容结束-->
+</div><!-- /Page Container 页面容器结束-->
+
+<!--引入js公共内容-->
+<div th:replace="common_office :: #commonscript_office"><!--id声明的--></div>
+</body>
+</html>

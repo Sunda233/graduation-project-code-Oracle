@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esp.boot.mapper.CaregiverMapper">
+<!--看护组长信息mapper-->
+
+    <!--表的关联-->
+    <resultMap type="com.esp.boot.entity.EspCaregiverleaderinfo" id="EspCaregiverleaderinfoMap">
+    <result property="careleaderinfoid" column="careleaderinfo_id" jdbcType="INTEGER"/>
+    <result property="careLeaderInfoPassword" column="careleaderinfo_password" jdbcType="VARCHAR"/>
+
+        <!--看护人员表的关联-->
+        <association javaType="com.esp.boot.entity.EspCaregiverinfo" property="caregiverinfo">
+            <result property="caregiverId" column="caregiver_id" jdbcType="INTEGER"/>
+            <result property="caregiverEmpno" column="caregiver_empno" jdbcType="VARCHAR"/>
+            <result property="caregiverPhone" column="caregiver_phone" jdbcType="VARCHAR"/>
+            <result property="caregiverName" column="caregiver_name" jdbcType="VARCHAR"/>
+            <result property="caregiverAge" column="caregiver_age" jdbcType="INTEGER"/>
+            <result property="caregiverSex" column="caregiver_sex" jdbcType="VARCHAR"/>
+            <result property="caregiverHeight" column="caregiver_height" jdbcType="INTEGER"/>
+            <result property="caregiverIdnumber" column="caregiver_idnumber" jdbcType="VARCHAR"/>
+            <result property="caregiverIntheyear" column="caregiver_intheyear" jdbcType="VARCHAR"/>
+        </association>
+
+    </resultMap>
+
+    <!--删除看护组长信息-->
+    <delete id="deleteinfocaregiverleader">
+        delete from esp_caregiverleaderinfo where caregiver_empno = #{no}
+    </delete>
+    <!--添加看护组长信息-->
+    <insert id="insertinfocaregiverleader" keyProperty="careleaderinfoid" useGeneratedKeys="true">/*id值返回给原来要插入的对象里*/
+        insert into esp_caregiverleaderinfo(caregiver_empno, careleaderinfo_password)
+        values (#{caregiverinfo.caregiverEmpno}, #{careLeaderInfoPassword})
+    </insert>
+    <!--看护组长查询个人信息-->
+    <select id="getoneleaderInfo" resultMap="EspCaregiverleaderinfoMap">
+        select
+        *
+        from esp_caregiverleaderinfo,esp_caregiverinfo
+        where esp_caregiverleaderinfo.caregiver_empno=esp_caregiverinfo.caregiver_empno
+        and esp_caregiverleaderinfo.caregiver_empno = #{no}
+    </select>
+    <!--看护组长更改密码-->
+    <update id="updateinfocaregiverleader">
+        update esp_caregiverleaderinfo
+        <set>
+            <if test="careLeaderInfoPassword!= null and careLeaderInfoPassword != ''">
+                careleaderinfo_password = #{careLeaderInfoPassword},
+            </if>
+        </set>
+        where caregiver_empno = #{caregiverinfo.caregiverEmpno}
+    </update>
+    <!--查询全部-->
+    <select id="getAllleaderInfo" resultMap="EspCaregiverleaderinfoMap">
+        select
+        *
+        from esp_caregiverleaderinfo,esp_caregiverinfo
+        where esp_caregiverleaderinfo.caregiver_empno=esp_caregiverinfo.caregiver_empno
+    </select>
+    <!--查询所有未分组的看护组长信息-->
+    <select id="getSomeleaderInfoByUnGroup" resultMap="EspCaregiverleaderinfoMap">
+        select
+        *
+        from esp_caregiverleaderinfo,esp_caregiverinfo
+        where esp_caregiverleaderinfo.caregiver_empno=esp_caregiverinfo.caregiver_empno
+        and esp_caregiverleaderinfo.caregiver_empno not in (SELECT caregiver_empno from esp_groupinfo)
+    </select>
+
+
+</mapper>

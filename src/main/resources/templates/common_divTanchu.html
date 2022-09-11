@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>点击弹出一个div</title>
+    <!--引入自定义的jqery-->
+    <!--引入js-->
+   <!-- <script src="echarts.min.js"></script>-->
+</head>
+<style>
+    *{
+        margin: 0px;
+    }
+    #content{
+        border: 1px red solid;
+        width: 800px;
+        height: 500px;
+        margin: auto;
+    }
+    #button{
+        margin: auto;
+        margin-top: 10px;
+    }
+    /*被弹出的div*/
+    #eject{
+        border: 1px blue solid;
+        border-radius: 10px;
+        width: 300px;
+        height: 300px;
+        /*让其浮在最上面*/
+        position: absolute;
+        display: none;
+        /*设置弹出的div窗口位置*/
+        left: 40%;
+        top: 30%;
+    }
+    /*弹出窗口后，背部不可点击操作*/
+    #background_div{
+        background-color:rgba(220,220,220,0.5);
+        position: absolute;
+    }
+</style>
+<!--点击弹出div-->
+<script>
+    $(function(){  //页面加载完毕事件
+        alert("页面加载")
+        //获取页面的实际高度和宽度
+        var hei = $(document).height();
+        var wid = $(document).width();
+//			点击弹出一个div框
+        $("#button").click(function(){ //给按钮绑定点击事件
+            $("#background_div").css("width",wid);
+            $("#background_div").css("height",hei);
+            $("#eject").show();
+        });
+//			点击关闭这个div框
+        $("#close").click(function(){
+            $("#background_div").css("width",0);
+            $("#background_div").css("height",0);
+            $("#eject").hide();
+        });
+//			鼠标移动到关闭按钮，按钮变红色,移除变黑色
+        $("#close").mouseover(function(){
+            $("#close span").css("color","red");
+            $("#close span").css("cursor","default");
+        });
+        $("#close").mouseout(function(){
+            $("#close span").css("color","black");
+        });
+    });
+</script>
+<!--图标绘制-->
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            text: 'ECharts 入门示例'
+        },
+        tooltip: {},
+        legend: {
+            data:['销量']
+        },
+        xAxis: {
+            data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+        },
+        yAxis: {},
+        series: [{
+            name: '销量',
+            type: 'bar',
+            data: [5, 20, 36, 10, 10, 20]
+        }]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+<body>
+<div id="main2" style="position: relative;">
+    <div id="background_div" >
+    </div>
+    <div id="content" >
+        这里是主内容区
+    </div>
+    <div id="main" style="width: 600px;height:400px;"></div>
+    <input style="display: block;" id="button" type="button" value="点击弹出div"/>
+</div>
+
+<div id="eject">
+    <!--做一个点击关闭的按钮-->
+    <div id="close" style="width: 20px;height: 25px; margin-left: 275px;">
+        <span style="font-size: 25px;">X</span>
+    </div>
+    <!--弹出div的内容-->
+    <div style="margin: auto; width: 120px; height: 20px;margin-top: 100px;">
+        我是弹出的div
+    </div>
+</div>
+</body>
+</html>

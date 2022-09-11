@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esp.boot.mapper.GroupMapper">
+
+    <!--表的关联-->
+    <resultMap type="com.esp.boot.entity.EspGroupInfo" id="GroupinfoMap">
+        <result property="groupId" column="group_id" jdbcType="INTEGER"/>
+        <result property="groupName" column="group_name" jdbcType="VARCHAR"/>
+
+        <!--看护人员表的关联-->
+        <association javaType="com.esp.boot.entity.EspCaregiverinfo" property="caregiverinfo">
+            <result property="caregiverId" column="caregiver_id" jdbcType="INTEGER"/>
+            <result property="caregiverEmpno" column="caregiver_empno" jdbcType="VARCHAR"/>
+            <result property="caregiverPhone" column="caregiver_phone" jdbcType="VARCHAR"/>
+            <result property="caregiverName" column="caregiver_name" jdbcType="VARCHAR"/>
+            <result property="caregiverAge" column="caregiver_age" jdbcType="INTEGER"/>
+            <result property="caregiverSex" column="caregiver_sex" jdbcType="VARCHAR"/>
+            <result property="caregiverHeight" column="caregiver_height" jdbcType="INTEGER"/>
+            <result property="caregiverIdnumber" column="caregiver_idnumber" jdbcType="VARCHAR"/>
+            <result property="caregiverIntheyear" column="caregiver_intheyear" jdbcType="VARCHAR"/>
+        </association>
+
+    </resultMap>
+
+    <!--****************************************************查******************************************-->
+    <!--oldman_Id,oldman_serialnumber,oldman_idnumber,oldman_name,oldman_sex,oldman_height,oldman_age,oldman_checkintime,oldman_roomnumber,caregiver_empno-->
+    <!--查询全部-->
+    <select id="getAllInfo" resultMap="GroupinfoMap">
+        select
+        *
+        from esp_groupInfo,esp_caregiverinfo
+        where esp_groupInfo.caregiver_empno=esp_caregiverinfo.caregiver_empno
+    </select>
+
+    <select id="getAllgroupId" resultMap="GroupinfoMap">
+        select
+        *
+        from esp_groupInfo
+    </select>
+
+
+    <!--添加一个新分组-->
+    <insert id="insertinfo" keyProperty="groupId" useGeneratedKeys="true">/*id值返回给原来要插入的对象里*/
+        insert into esp_groupInfo(group_name, caregiver_empno)
+        values (#{groupName}, #{caregiverinfo.caregiverEmpno})
+    </insert>
+
+    <!--删除分组信息-->
+    <delete id="deleteinfo">
+        delete from esp_groupInfo where group_id = #{no}
+    </delete>
+
+    <!--根据编号查询小组中人员信息（不带组号版本）（暂时不用）-->
+    <select id="getOneInfo" resultMap="GroupinfoMap">
+        select
+        *
+        from esp_groupInfo
+        where group_id = #{no}
+    </select>
+
+    <!--修改分组信息-->
+    <update id="updateinfo">
+        update esp_groupInfo
+        <set>
+            <if test="groupName!= null and groupName != ''">
+                group_name = #{groupName},
+            </if>
+            <if test="caregiverinfo.caregiverEmpno!= null and caregiverinfo.caregiverEmpno!= ''">
+                caregiver_empno = #{caregiverinfo.caregiverEmpno},
+            </if>
+        </set>
+        where group_id = #{groupId}
+    </update>
+
+    <!--通过组长工号获得组号与组长信息-->
+    <select id="getOneInfobycaregiver" resultMap="GroupinfoMap">
+        select
+        *
+        from esp_groupInfo,esp_caregiverinfo
+        where esp_groupInfo.caregiver_empno = #{no} and esp_groupInfo.caregiver_empno=esp_caregiverinfo.caregiver_empno
+    </select>
+
+
+</mapper>

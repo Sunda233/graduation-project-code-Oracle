@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!-- Page Sidebar 左侧菜单栏 -->
+<div class="page-sidebar" id="leftmenu">
+    <a class="logo-box" href="index.html">
+        <span>ESP-看护组长</span>
+        <i class="icon-radio_button_unchecked" id="fixed-sidebar-toggle-button"></i>
+        <i class="icon-close" id="sidebar-toggle-button-close"></i>
+    </a>
+    <div class="page-sidebar-inner">
+        <div class="page-sidebar-menu">
+            <ul class="accordion-menu">
+                <!--自己写-->
+                <li>
+                    <a th:href="@{/infoOneself_caregiver}" id="infoOneself_caregiver">
+                        <i class="menu-icon icon-inbox"></i><span>个人信息</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/table_caregiver_getcaregiverinfoBygroup}" id="table_caregiver_getcaregiverinfoBygroup">
+                        <i class="menu-icon icon-inbox"></i><span>查看本组看护信息</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)">
+                        <i class="menu-icon icon-format_list_bulleted"></i><span>老人管理</span><i class="accordion-icon fa fa-angle-left"></i><!--class图标式样-->
+                    </a>
+                    <ul class="sub-menu">
+                        <li><a th:href="@{/table_caregiver_getoldmaninfoBygroup}" id="table_caregiver_getoldmaninfoBygroup">查看本组老人信息</a></li>
+                        <li><a th:href="@{/select/ElderlyPhysicalData}" id="ElderlyPhysicalData">老人身体数据</a></li>
+                    </ul>
+                </li>
+                <!--老人信息管理-->
+                <li>
+                    <a href="javascript:void(0)">
+                        <i class="menu-icon icon-format_list_bulleted"></i><span>亲属信息管理</span><i class="accordion-icon fa fa-angle-left"></i><!--class图标式样-->
+                    </a>
+                    <ul class="sub-menu">
+                        <li><a th:href="@{/caregiver/email}"><i class="menu-icon icon-inbox"></i>处理亲属留言</a></li>
+                        <li><a th:href="@{/caregiver/table_relatives_Visitappointment}"><i class="menu-icon icon-inbox"></i>处理预约通知</a></li>
+                        <li><a th:href="@{/table_caregiver_getrelativesBygroup}">已绑定老人亲属</a></li><!--采用分组表格模式-->
+                    </ul>
+                </li>
+                <li class="menu-divider"></li>
+            </ul>
+        </div>
+    </div>
+</div><!-- /Page Sidebar -->
+<!-- Page Header 页面顶部导航栏 -->
+<div class="page-header"  id="headermenu">
+    <div class="search-form">
+        <form action="#" method="GET">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control search-input" placeholder="Type something...">
+                <span class="input-group-btn">
+                                    <button class="btn btn-default" id="close-search" type="button"><i class="icon-close"></i></button>
+                                </span>
+            </div>
+        </form>
+    </div>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <div class="logo-sm">
+                    <a href="javascript:void(0)" id="sidebar-toggle-button"><i class="fa fa-bars"></i></a>
+                    <a class="logo-box" href="index.html"><span>ecaps</span></a>
+                </div>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <i class="fa fa-angle-down"></i>
+                </button>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav"><!--目前作用未知-->
+                <li><a href="javascript:void(0)" id="collapsed-sidebar-toggle-button"><i class="fa fa-bars"></i></a></li>
+                <li><a href="javascript:void(0)" id="toggle-fullscreen"><i class="fa fa-expand"></i></a></li>
+                <li><a href="javascript:void(0)" id="search-button"><i class="fa fa-search"></i></a></li>
+            </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a th:href="@{/caregiver/email}"><i class="fa fa-envelope"></i></a></li>
+                    <li class="dropdown user-dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="http://via.placeholder.com/36x36" alt="" class="img-circle"></a>
+                        <ul class="dropdown-menu">
+                            <li><a th:href="@{/infoOneself_caregiver}">个人信息</a></li>
+                            <li><a th:href="@{/logout}">退出系统</a></li>
+                        </ul>
+                    </li>
+                    <!--登录成功显示的用户名 thymeleaf语法,获取session中存放的值-->
+                    <li><a href="#">欢迎您  [[${session.info.caregiverName}]]</a></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+</div><!-- /Page Header -->
+
+<script>
+ /*   function Visitappointment(caregiverEmpno){
+        /!*获取no*!/
+        alert("获取的工号"+caregiverEmpno);
+        $.ajax({
+            url: "/caregiver/table_relatives_Visitappointment",
+            type: "POST",//方法类型
+            data: {
+                caregiverEmpno: caregiverEmpno,
+            }
+        });
+    }*/
+</script>
+<script>
+    //post跳转页面
+ /*   function email(caregiverEmpno) {
+        if (confirm(msg)==true){
+            /!*获取no*!/
+            alert("获取的工号"+caregiverEmpno);
+            $.ajax({
+                url: "/caregiver/delete",
+                type: "POST",//方法类型
+                data: {
+                    caregiverEmpno: caregiverEmpno,
+                },
+                success: function(data) {
+                    alert(data.msgCode+data.setMessage);/!*成功获取到数据*!/
+                    location.reload();
+                },
+                error: function(data) {
+                    alert(data.msgCode+data.setMessage);
+                    location.reload();
+                }
+            });
+        }else{
+            return false;
+        }
+    }*/
+    //查询预约通知单
+</script>
+
+
+<div id="commonscript_caregiver" ><!--公共内容的抽取  th:fragment="commonscript-office"或者使用id-->
+    <!-- Javascripts -->
+    <script th:src="@{/assets/plugins/jquery/jquery-3.1.0.min.js}"></script><!--可以更改为thymeleaf写法-->
+    <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="assets/plugins/uniform/js/jquery.uniform.standalone.js"></script>
+    <script src="assets/plugins/switchery/switchery.min.js"></script>
+    <script src="assets/plugins/d3/d3.min.js"></script>
+    <script src="assets/plugins/nvd3/nv.d3.min.js"></script>
+    <script src="assets/plugins/flot/jquery.flot.min.js"></script>
+    <script src="assets/plugins/flot/jquery.flot.time.min.js"></script>
+    <script src="assets/plugins/flot/jquery.flot.symbol.min.js"></script>
+    <script src="assets/plugins/flot/jquery.flot.resize.min.js"></script>
+    <script src="assets/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="assets/plugins/flot/jquery.flot.pie.min.js"></script>
+    <script src="assets/plugins/chartjs/chart.min.js"></script>
+    <script src="assets/js/ecaps.min.js"></script>
+    <script src="assets/js/pages/dashboard.js"></script>
+</div>
+</body>
+</html>

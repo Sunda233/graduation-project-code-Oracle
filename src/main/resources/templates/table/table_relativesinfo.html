@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<!--看护人员管理界面-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Responsive Admin Dashboard Template">
+    <meta name="keywords" content="admin,dashboard">
+    <meta name="author" content="skcats">
+    <!-- The above 6 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title -->
+    <title>亲属信息查看</title>
+
+    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="assets/plugins/icomoon/style.css" rel="stylesheet">
+    <link href="assets/plugins/uniform/css/default.css" rel="stylesheet"/>
+    <link href="assets/plugins/switchery/switchery.min.css" rel="stylesheet"/>
+    <link href="assets/plugins/datatables/css/jquery.datatables.min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/plugins/datatables/css/jquery.datatables_themeroller.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/plugins/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" type="text/css"/>
+
+    <!-- Theme Styles -->
+    <link href="assets/css/ecaps.min.css" rel="stylesheet">
+    <link href="assets/css/custom.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+<!-- Page Container -->
+<div class="page-container">
+    <!-- Page Sidebar，，左侧菜单栏 -->
+    <div th:replace="common_office :: #leftmenu_office"></div><!-- /Page Sidebar 左侧菜单栏结束-->
+    <!-- Page Content -->
+    <div class="page-content">
+        <!-- Page Header 页面顶部导航栏-->
+        <div th:replace="common_office :: #headermenu_office"></div><!--公共内容抽取--><!-- /Page Header 页面顶部导航栏-->
+
+        <!-- Page Inner -->
+        <div class="page-inner">
+            <div class="page-title">
+                <h3 class="breadcrumb-header">查看亲属人员信息</h3>
+            </div>
+            <div id="main-wrapper">
+                <div class="row">
+                    <div class="col-md-12">
+                        <!--数据表格-->
+                        <div class="panel panel-white">
+                            <div class="panel-heading">
+                                <!--<h4 class="panel-title">Add rows</h4>-->
+                            </div>
+                            <div class="panel-body"><!--模态框(modal) 触发事件(data-toggle) 触发对象data-target(ID 或类)-->
+                                <!-- Modal -->
+                                <div class="table-responsive">
+                                    <table id="example3" class="display table" style="width: 100%; cellspacing: 0;">
+                                        <thead>
+                                        <tr>
+                                            <th>序号</th>
+                                            <th>编号</th>
+                                            <th>姓名</th>
+                                            <th>联系方式</th>
+                                        </tr>
+                                        </thead>
+                                        <tfoot>
+                                        <tr>
+                                            <th>序号</th>
+                                            <th>编号</th>
+                                            <th>姓名</th>
+                                            <th>联系方式</th>
+                                        </tr>
+                                        </tfoot>
+                                        <tbody>
+                                        <!--list数组放入，遍历EspOldmaninfos，每一个都是EspOldmaninfo对象,stats是当前的状态-->
+                                        <tr th:each="relativesinfo,status:${modelinfo}"><!--前一个可以自己起名--><!--status为当前状态-->
+                                            <th th:text="${status.count}">序号</th><!--计数，index从0开始，count从1开始-->
+                                            <th th:text="${relativesinfo.relativesSerialnumber}" id="th_caregiverEmpno">编号</th>
+                                            <th th:text="${relativesinfo.relativesName}">姓名</th><!--红线不影响，可以获取到值-->
+                                            <th th:text="${relativesinfo.relativesPhone}">联系方式</th><!--data-toggle="modal" data-target="#myModal",增加此触发模态框-->
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div><!--数据表格结束-->
+                    </div>
+                </div><!-- Row -->
+            </div><!-- Main Wrapper -->
+            <!--页脚防伪标识-->
+            <div th:replace="common_office :: #page_footer_ssd"></div><!--标识结束-->
+        </div><!-- /Page Inner -->
+        <!--右侧聊天框界面-->
+        <div th:replace="common_office :: #right_sidebar"></div><!--公共内容抽取-->
+        <!--右侧聊天框-->
+    </div><!-- /Page Content -->
+</div><!-- /Page Container -->
+
+<!--下拉框加载值-->
+<script>
+    function getAllinfoCaregiver(){
+   // alert("获取下拉框数据");
+        /*清除下拉框数据，防止数据堆积*/
+        $("select[name=caregiverEmpno3]").empty();
+    $.ajax({
+        // cache: false,//每次读取的是最新的数据。
+        url: "/getAllinfo/Caregiver",
+        type: "GET",//方法类型
+        dataType: "json",//预期服务器返回的数据类型
+        clearForm: true,// 成功提交后，清除所有的表单元素的值.
+        success: function(data) {
+          //  alert(data.valueOf());/*成功获取到数据*/
+            var optionString;
+            var beanList = data;
+                if(data!=null) {
+                    optionString = '';
+                    optionString += "<option value=\"\" >--请选择--</option>";
+                    for (var i = 0; i < beanList.length; i++) { //遍历，动态赋值
+                            optionString += "<option value=\"" + beanList[i].caregiverEmpno + "\"";
+                            optionString += ">" + beanList[i].caregiverEmpno + beanList[i].caregiverName + "</option>";
+
+                    }
+                    /*向下拉框中添加数据*/
+                   // alert(optionString);
+                    $("select[name=caregiverEmpno3]").append(optionString);
+
+                }
+        },
+        error: function(data) {
+            alert("查询信息失败");
+            //location.reload();
+        }
+    });
+    }
+</script>
+<!--自己写的js-->
+<script>
+    /*删除按钮*/
+        function del(caregiverEmpno) {
+            var msg = "您真的确定要删除吗？\n\n请确认！";
+            if (confirm(msg)==true){
+                /*获取no*/
+                alert("获取的工号"+caregiverEmpno);
+              $.ajax({
+                    url: "/caregiver/delete",
+                    type: "POST",//方法类型
+                    data: {
+                        caregiverEmpno: caregiverEmpno,
+                    },
+                    success: function(data) {
+                        alert(data.msgCode+data.setMessage);/*成功获取到数据*/
+                        location.reload();
+                    },
+                    error: function(data) {
+                        alert(data.msgCode+data.setMessage);
+                        location.reload();
+                    }
+                });
+            }else{
+                return false;
+            }
+        }
+    <!--向模态弹窗传值以及获取下拉框加载值-->
+        function updateInfo(caregiverEmpno) {
+            /**
+             * 向模态框中传值
+             */
+            $.ajax({
+                cache: false,//每次读取的是最新的数据。
+                url: "/selectone/caregiver",
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                clearForm: true,// 成功提交后，清除所有的表单元素的值.
+                data: {
+                    no : caregiverEmpno,
+                },
+                success: function(data) {
+                    $("#caregiverEmpno2").val(caregiverEmpno);
+                    $("#caregiverName2").val(data.caregiverName);
+                    $("#caregiverSex2").val(data.caregiverSex);
+                    $("#caregiverAge2").val(data.caregiverAge);
+                    $("#caregiverHeight2").val(data.caregiverHeight);
+                    $("#caregiverIdnumber2").val(data.caregiverIdnumber);
+                    $("#caregiverPhone2").val(data.caregiverPhone);
+                    $("#caregiverIntheyear2").val(data.caregiverIntheyear);
+                },
+                error: function(data) {
+                    alert("查询信息失败");
+                    location.reload();
+                }
+            });
+        }
+</script>
+
+
+
+
+
+<!-- Javascripts -->
+<script src="assets/plugins/jquery/jquery-3.1.0.min.js"></script>
+<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<script src="assets/plugins/uniform/js/jquery.uniform.standalone.js"></script>
+<script src="assets/plugins/switchery/switchery.min.js"></script>
+<script src="assets/plugins/datatables/js/jquery.datatables.min.js"></script><!--页面模板js，table-->
+<script src="assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<script src="assets/js/ecaps.min.js"></script>
+<script src="assets/js/pages/table-data.js"></script>
+</body>
+</html>

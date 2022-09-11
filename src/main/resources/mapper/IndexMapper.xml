@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esp.boot.mapper.IndexMapper">
+<!--看护组长信息mapper-->
+
+    <!--表的关联-->
+    <resultMap type="com.esp.boot.entity.EspCaregiverleaderinfo" id="EspCaregiverleaderinfoMap">
+    <result property="careleaderinfoid" column="careleaderinfo_id" jdbcType="INTEGER"/>
+    <result property="careLeaderInfoPassword" column="careLeaderInfo_password" jdbcType="VARCHAR"/>
+
+        <!--看护人员表的关联-->
+        <association javaType="com.esp.boot.entity.EspCaregiverinfo" property="caregiverinfo">
+            <result property="caregiverId" column="caregiver_id" jdbcType="INTEGER"/>
+            <result property="caregiverEmpno" column="caregiver_empno" jdbcType="VARCHAR"/>
+            <result property="caregiverPhone" column="caregiver_phone" jdbcType="VARCHAR"/>
+            <result property="caregiverName" column="caregiver_name" jdbcType="VARCHAR"/>
+            <result property="caregiverAge" column="caregiver_age" jdbcType="INTEGER"/>
+            <result property="caregiverSex" column="caregiver_sex" jdbcType="VARCHAR"/>
+            <result property="caregiverHeight" column="caregiver_height" jdbcType="INTEGER"/>
+            <result property="caregiverIdnumber" column="caregiver_idnumber" jdbcType="VARCHAR"/>
+            <result property="caregiverIntheyear" column="caregiver_intheyear" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+
+    <!--办公人员map-->
+    <resultMap type="com.esp.boot.entity.EspOfficestaff" id="officestaffinfoMap">
+        <result property="officestaffId" column="officestaff_id" jdbcType="INTEGER"/>
+        <result property="officestaffEmpno" column="officestaff_empno" jdbcType="VARCHAR"/>
+        <result property="officestaffPassword" column="officestaff_password" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--亲属map-->
+    <resultMap type="com.esp.boot.entity.EspRelativesinfo" id="relativesinfoMap">
+        <result property="relativesId" column="relatives_id" jdbcType="INTEGER"/>
+        <result property="relativesSerialnumber" column="relatives_serialnumber" jdbcType="VARCHAR"/>
+        <result property="relativesName" column="relatives_name" jdbcType="VARCHAR"/>
+        <result property="relativesPhone" column="relatives_phone" jdbcType="VARCHAR"/>
+        <result property="relativesPassword" column="relatives_password" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询办公人员账号信息-->
+    <select id="selectStaff" resultMap="officestaffinfoMap">
+        select
+        *
+        from esp_officestaff
+        where  officestaff_empno = #{username} and officestaff_password= #{password}
+    </select>
+    <!--查询亲属账号信息,(使用手机号登录)-->
+    <select id="selectRelatives" resultMap="relativesinfoMap">
+        select
+        *
+        from esp_relativesinfo
+        where  relatives_phone = #{username} and relatives_password= #{password}
+    </select>
+    <!--查询看护人员信息-->
+    <select id="selectCaregiver" resultMap="EspCaregiverleaderinfoMap">
+        select
+        *
+        from esp_caregiverleaderinfo,esp_caregiverinfo
+        where esp_caregiverleaderinfo.caregiver_empno=esp_caregiverinfo.caregiver_empno and esp_caregiverleaderinfo.caregiver_empno = #{username} and careLeaderInfo_password= #{password}
+    </select>
+    <!--添加亲属账号信息-->
+    <insert id="insert" keyProperty="relativesId" useGeneratedKeys="true">/*id值返回给原来要插入的对象里*/
+        insert into esp_relativesinfo(relatives_serialnumber, relatives_name, relatives_phone,relatives_password)
+        values (#{relativesSerialnumber}, #{relativesName}, #{relativesPhone}, #{relativesPassword})
+    </insert>
+</mapper>

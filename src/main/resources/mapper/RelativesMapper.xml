@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esp.boot.mapper.RelativesMapper">
+<!--家属数据mapper-->
+
+    <!--表的关联-->
+    <resultMap type="com.esp.boot.entity.EspRelativesinfo" id="Relativesinfo">
+    <result property="relativesId" column="relatives_id" jdbcType="INTEGER"/>
+    <result property="relativesSerialnumber" column="relatives_serialnumber" jdbcType="VARCHAR"/>
+    <result property="relativesName" column="relatives_name" jdbcType="VARCHAR"/>
+    <result property="relativesPhone" column="relatives_phone" jdbcType="VARCHAR"/>
+    <result property="relativesPassword" column="relatives_password" jdbcType="INTEGER"/>
+
+    </resultMap>
+
+    <!--亲属修改密码-->
+    <update id="updatePwdRelatives">
+        update esp_relativesinfo
+        <set>
+            <if test="relativesPassword!= null and relativesPassword != ''">
+                relatives_password = #{relativesPassword},
+            </if>
+        </set>
+        where relatives_serialnumber = #{relativesSerialnumber}
+    </update>
+    <!--查询全部亲属信息-->
+    <select id="getAllInfo" resultMap="Relativesinfo">
+        select
+        *
+        from esp_relativesinfo
+    </select>
+    <!--通过编号查询亲属信息-->
+    <select id="getOneInfo" resultMap="Relativesinfo">
+        select
+        *
+        from esp_relativesinfo
+        where relatives_serialnumber=#{no}
+    </select>
+</mapper>

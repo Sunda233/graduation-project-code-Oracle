@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esp.boot.mapper.RelativesoldmanrelativeMapper">
+    <!--表的关联-->
+    <resultMap type="com.esp.boot.entity.EspRelativesoldmanrelative" id="EspRelativesoldmanrelative">
+        <result property="rorId" column="ror_id" jdbcType="INTEGER"/>
+        <result property="relativesrelative" column="relatives_relative" jdbcType="VARCHAR"/>
+        <!--老人表的关联-->
+        <association javaType="com.esp.boot.entity.EspOldmaninfo" property="oldmaninfo">
+            <result property="oldmanId" column="oldman_Id" jdbcType="INTEGER"/>
+            <result property="oldmanSerialnumber" column="oldman_serialnumber" jdbcType="VARCHAR"/>
+            <result property="oldmanIdnumber" column="oldman_idnumber" jdbcType="VARCHAR"/>
+            <result property="oldmanName" column="oldman_name" jdbcType="VARCHAR"/>
+            <result property="oldmanSex" column="oldman_sex" jdbcType="VARCHAR"/>
+            <result property="oldmanHeight" column="oldman_height" jdbcType="INTEGER"/>
+            <result property="oldmanAge" column="oldman_age" jdbcType="INTEGER"/>
+            <result property="oldmanCheckintime" column="oldman_checkintime" jdbcType="VARCHAR"/>
+            <result property="oldmanRoomnumber" column="oldman_roomnumber" jdbcType="VARCHAR"/>
+        </association>
+        <!--亲属表的关联-->
+        <association javaType="com.esp.boot.entity.EspRelativesinfo" property="relativesinfo">
+            <result property="relativesId" column="relatives_id" jdbcType="INTEGER"/>
+            <result property="relativesSerialnumber" column="relatives_serialnumber" jdbcType="VARCHAR"/>
+            <result property="relativesName" column="relatives_name" jdbcType="VARCHAR"/>
+            <result property="relativesPhone" column="relatives_phone" jdbcType="VARCHAR"/>
+            <result property="relativesPassword" column="relatives_password" jdbcType="INTEGER"/>
+        </association>
+        <!--看护人员表的关联-->
+        <association javaType="com.esp.boot.entity.EspCaregiverinfo" property="oldmaninfo.caregiverinfo">
+            <result property="caregiverId" column="caregiver_id" jdbcType="INTEGER"/>
+            <result property="caregiverEmpno" column="caregiver_empno" jdbcType="VARCHAR"/>
+            <result property="caregiverPhone" column="caregiver_phone" jdbcType="VARCHAR"/>
+            <result property="caregiverName" column="caregiver_name" jdbcType="VARCHAR"/>
+            <result property="caregiverAge" column="caregiver_age" jdbcType="INTEGER"/>
+            <result property="caregiverSex" column="caregiver_sex" jdbcType="VARCHAR"/>
+            <result property="caregiverHeight" column="caregiver_height" jdbcType="INTEGER"/>
+            <result property="caregiverIdnumber" column="caregiver_idnumber" jdbcType="VARCHAR"/>
+            <result property="caregiverIntheyear" column="caregiver_intheyear" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+
+    <!--****************************************************查******************************************-->
+    <!--oldman_Id,oldman_serialnumber,oldman_idnumber,oldman_name,oldman_sex,oldman_height,oldman_age,oldman_checkintime,oldman_roomnumber,caregiver_empno-->
+    <!--根据亲属编号查询全部老人信息（顺带可以查询看护信息）-->
+    <select id="getAllInfoBySn" resultMap="EspRelativesoldmanrelative">
+        select
+        *
+        from esp_relativesoldmanrelative,esp_oldmaninfo,esp_caregiverinfo
+        where relatives_serialnumber = #{sn} and esp_relativesoldmanrelative.oldman_serialnumber=esp_oldmaninfo.oldman_serialnumber
+    </select>
+
+    <!--通过编号删除-->
+    <delete id="deleteinfo">
+        delete from esp_relativesoldmanrelative where ror_id = #{no}
+    </delete>
+
+    <!--添加一个新信息-->
+    <insert id="insertinfo" keyProperty="rorId" useGeneratedKeys="true">/*id值返回给原来要插入的对象里*/
+        insert into esp_relativesoldmanrelative(oldman_serialnumber, relatives_serialnumber,relatives_relative)
+        values (#{oldmaninfo.oldmanSerialnumber}, #{relativesinfo.relativesSerialnumber}, #{relativesrelative})
+    </insert>
+
+    <!--通过老人编号和亲属编号查询-->
+    <select id="getSomeInfo" resultMap="EspRelativesoldmanrelative">
+        select
+        *
+        from esp_relativesoldmanrelative
+        where relatives_serialnumber = #{sn} and oldman_serialnumber = #{sn2}
+    </select>
+
+</mapper>
