@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.esp.boot.mapper.empMapper">
+
+
+    <!--表的关联-->
+    <resultMap type="com.esp.boot.entity.emp" id="empMap">
+    <result property="empno" column="EMPNO" jdbcType="INTEGER"/>
+    <result property="ename" column="ENAME" jdbcType="VARCHAR"/>
+    <result property="job" column="JOB" jdbcType="VARCHAR"/>
+    <result property="mgr" column="MGR" jdbcType="INTEGER"/>
+    <result property="hiredate" column="HIREDATE" jdbcType="DATE"/>
+    <result property="sal" column="SAL" jdbcType="INTEGER"/>
+    <result property="comm" column="COMM" jdbcType="INTEGER"/>
+    <result property="deptno" column="DEPTNO" jdbcType="INTEGER"/>
+    </resultMap>
+    <!--查询全部-->
+    <select id="getAllInfo" resultMap="empMap">
+        select
+        *
+        from emp
+    </select>
+
+
+</mapper>

@@ -31,7 +31,7 @@ public class WebConfig implements WebMvcConfigurer{
      * 自己给容器中放一个_m的请求，可以拦截器重写
      * @return
      */
-    @Bean
+/*    @Bean
     public HiddenHttpMethodFilter hiddenHttpMethodFilter(){
         HiddenHttpMethodFilter methodFilter = new HiddenHttpMethodFilter();
         methodFilter.setMethodParam("_m");
@@ -42,18 +42,18 @@ public class WebConfig implements WebMvcConfigurer{
     @Bean
     public WebMvcConfigurer webMvcConfigurer(){
         return new WebMvcConfigurer() {
-            /*矩阵变量配置*/
- /*           @Override
+            *//*矩阵变量配置*//*
+ *//*           @Override
             public void configurePathMatch(PathMatchConfigurer configurer) {
                 UrlPathHelper urlPathHelper = new UrlPathHelper();
                 // 不移除；后面的内容。矩阵变量功能就可以生效
-                urlPathHelper.setRemoveSemicolonContent(false);*//*使矩阵变量生效*//*
+                urlPathHelper.setRemoveSemicolonContent(false);*//**//*使矩阵变量生效*//**//*
                 configurer.setUrlPathHelper(urlPathHelper);
-            }*/
+            }*//*
 
-            /**
+            *//**
              * 拦截器
-             */
+             *//*
             @Override
             public void addInterceptors(InterceptorRegistry registry) {
                 registry.addInterceptor(new LoginInterceptor())
@@ -67,14 +67,14 @@ public class WebConfig implements WebMvcConfigurer{
 //                        "/js/**","/aa/**");
             }
 
-            /**
+            *//**
              * 自定义内容协商策略
              * @param configurer
              *
              *      * 1、浏览器发请求直接返回 xml    [application/xml]        jacksonXmlConverter
              *      * 2、如果是ajax请求 返回 json   [application/json]      jacksonJsonConverter
-             */
-   /*         @Override
+             *//*
+   *//*         @Override
             public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
                 //Map<String, MediaType> mediaTypes
                 Map<String, MediaType> mediaTypes = new HashMap<>();
@@ -87,8 +87,8 @@ public class WebConfig implements WebMvcConfigurer{
                 HeaderContentNegotiationStrategy headeStrategy = new HeaderContentNegotiationStrategy();
 
                 configurer.strategies(Arrays.asList(parameterStrategy,headeStrategy));
-            }*/
+            }*//*
 
         };
-    }
+    }*/
 }

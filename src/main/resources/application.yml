@@ -1,11 +1,11 @@
 spring:
   #数据库配置
   datasource:
-    url: jdbc:mysql://localhost:3306/elderly_service_platform?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-    username: root
+    url: jdbc:oracle:thin:@localhost:1521:orcl
+    username: scott
     password: 123456
     #数据库驱动的名字
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: oracle.jdbc.driver.OracleDriver
 
     druid:
       aop-patterns: com.atguigu.admin.*  #springbean监控
@@ -33,6 +33,11 @@ spring:
           config:
             drop-table-allow: false  #不允许删表，所有删表操作都拦截
 
+  jpa:
+    database: oracle
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
 
   mvc:
     #开启请求映射rest，现在： /user    GET-获取用户    DELETE-删除用户     PUT-修改用户      POST-保存用户

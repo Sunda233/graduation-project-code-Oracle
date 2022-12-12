@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.esp.boot</groupId>
-    <artifactId>esp-springboot2</artifactId>
+    <artifactId>Oracle-Final-Practice</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>esp-springboot2</name>
     <description>毕业设计-养老服务平台-孙达</description>
@@ -36,6 +36,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.oracle.database.nls/orai18n -->
+        <dependency>
+            <groupId>com.oracle.database.nls</groupId>
+            <artifactId>orai18n</artifactId>
+            <version>19.7.0.0</version>
+        </dependency>
         <!--进行数据库配置-->
         <!--导入jdbc的有关场景-->
       <!--  <dependency>
@@ -47,6 +53,11 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.25</version>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <!--引入druid数据源，配置数据库用-->
         <dependency>
